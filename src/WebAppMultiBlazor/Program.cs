@@ -73,8 +73,16 @@ app.MapWhen(ctx => IsAdminPage(ctx),
 		});
 	});
 
+
+
 // Main web
-app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/"), // not sure if needed?
+app.Use((ctx, nxt) =>
+{
+	// apply "prefix" to everything reaching this point
+	ctx.Request.Path = "/web" + ctx.Request.Path;
+	return nxt();
+});
+app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/web"), // not sure if needed?
 	defaultApp =>
 	{
 		defaultApp.UsePathBase("/web");
@@ -90,8 +98,9 @@ app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/"), // not sure if need
 			defaultApp.UseHsts();
 		}
 
-		defaultApp.UseBlazorFrameworkFiles("/");
+		defaultApp.UseBlazorFrameworkFiles("/web");
 
+		defaultApp.UseStaticFiles("/web");
 		defaultApp.UseStaticFiles();
 
 		defaultApp.UseRouting();
