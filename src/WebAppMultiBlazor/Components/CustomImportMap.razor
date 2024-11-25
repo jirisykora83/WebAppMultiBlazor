@@ -1,0 +1,37 @@
+﻿<h3>CustomImportMap</h3>
+
+@code
+{
+	private RenderHandle _renderHandle;
+	private bool _firstRender = true;
+	private ImportMapDefinition? _computedImportMapDefinition;
+
+	/// <summary>
+	/// Gets or sets the <see cref="HttpContext"/> for the component.
+	/// </summary>
+	[CascadingParameter]
+	public HttpContext? HttpContext { get; set; } = null;
+
+	/// <summary>
+	/// Gets or sets the import map definition to use for the component. If not set
+	/// the component will generate the import map based on the assets defined for this
+	/// application.
+	/// </summary>
+	[Parameter]
+	public ImportMapDefinition? ImportMapDefinition { get; set; }
+
+	public override Task SetParametersAsync(ParameterView parameters)
+	{
+		parameters.SetParameterProperties(this);
+		if (!_firstRender && ReferenceEquals(ImportMapDefinition, _computedImportMapDefinition))
+		{
+			return Task.CompletedTask;
+		}
+		else
+		{
+			_firstRender = false;
+			_computedImportMapDefinition = ImportMapDefinition ?? HttpContext?.GetEndpoint()?.Metadata.GetMetadata<ImportMapDefinition>();
+			return Task.CompletedTask;
+		}
+	}
+}

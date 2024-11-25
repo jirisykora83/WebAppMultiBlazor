@@ -1,0 +1,17 @@
+﻿@page "/"
+
+<h1>Web</h1>
+
+<div>Click: @count</div>
+
+<button @onclick="Callback">Add</button>
+
+@code
+{
+	int count;
+
+	private async Task Callback()
+	{
+		count++;
+	}
+}

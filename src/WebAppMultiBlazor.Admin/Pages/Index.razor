@@ -1,0 +1,18 @@
+﻿@page "/"
+
+<h1>Admin</h1>
+
+<div>Click: @count</div>
+
+<button @onclick="Callback">Add</button>
+
+@code
+{
+	int count;
+
+	private async Task Callback()
+	{
+		count++;
+		Console.WriteLine($"Current count: {count}");
+	}
+}
